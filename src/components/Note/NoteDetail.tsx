@@ -14,6 +14,7 @@ export const NoteDetail: FC = () => {
   const supabase = useSupabaseClient()
   const router = useRouter()
   const note = useStore((state) => state.note)
+  const noteContent = useStore((state) => state.noteContent)
   const setNote = useStore((state) => state.setNote)
   const resetNote = useStore((state) => state.resetNote)
 
@@ -22,7 +23,7 @@ export const NoteDetail: FC = () => {
       .from('notes')
       .update({
         title: note.title,
-        content: note.content,
+        content: noteContent.content,
       })
       .eq('id', note.id)
 
@@ -31,8 +32,7 @@ export const NoteDetail: FC = () => {
       return
     }
 
-    await router.push('/dashboard')
-    resetNote()
+    router.reload()
   }
 
   return (

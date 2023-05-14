@@ -25,7 +25,6 @@ export const EditorHeader: FC<Props> = ({
       <div className="max-w-[1140px] w-full mx-auto px-7">
         <div className="flex items-center justify-between">
           <button
-            // href={prevLink}
             onClick={() => handleBackButton(prevLink)}
             className="flex items-center gap-1 hover:opacity-75"
           >

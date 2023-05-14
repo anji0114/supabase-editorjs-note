@@ -6,47 +6,49 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import EditorJS from '@editorjs/editorjs'
+import EditorJS, { OutputData } from '@editorjs/editorjs'
 import { EDITOR_TOOLS, I18N } from '@/components/Editor/EditorTools'
 import { useStore } from '@/store'
 
 const EditorBlock: FC = () => {
   const [isMounted, setIsMounted] = useState<boolean>(false)
   const ref = useRef<EditorJS>()
-  const note = useStore((state) => state.note)
-  const setNote = useStore((state) => state.setNote)
+  const noteContent = useStore((state) => state.noteContent)
+  const setNoteContent = useStore((state) => state.setNoteContent)
 
   const initializeEditor = useCallback(
-    (data: any) => {
+    (noteContent: { content: OutputData }) => {
       if (!ref.current) {
         const editor = new EditorJS({
           holder: 'editor',
           tools: EDITOR_TOOLS,
           placeholder: '入力する',
-          data: data.content,
+          data: noteContent.content,
           i18n: I18N,
 
-          async onChange(api, event) {
+          async onChange(api) {
             const editorData = await api.saver.save()
-            setNote({ ...data, content: editorData })
+
+            setNoteContent({ content: editorData })
           },
         })
 
         ref.current = editor
       }
     },
-    [setNote]
+    [setNoteContent]
   )
 
   useEffect(() => {
-    if (note.id) {
+    if (noteContent.content.time) {
       setIsMounted(true)
     }
-  }, [note])
+  }, [noteContent])
 
+  // ノートのデータがある時
   useEffect(() => {
     if (isMounted) {
-      initializeEditor(note)
+      initializeEditor(noteContent)
 
       return () => {
         ref.current?.destroy()

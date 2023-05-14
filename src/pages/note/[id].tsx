@@ -14,6 +14,9 @@ const NoteId: NextPage = () => {
   const { id } = router.query
   const supabase = useSupabaseClient()
   const setNote = useStore((state) => state.setNote)
+  const setNoteContent = useStore((state) => state.setNoteContent)
+  const resetNote = useStore((state) => state.resetNote)
+  const resetNoteContent = useStore((state) => state.resetNoteContent)
   const { data, error, isLoading } = useSWR<Note>(
     id ? `/api/notes/${id}` : null
   )
@@ -29,8 +32,14 @@ const NoteId: NextPage = () => {
   }
 
   useEffect(() => {
-    if (data?.id) {
+    if (data?.id && data?.content?.time) {
       setNote(data)
+      setNoteContent({ content: data.content })
+    }
+
+    return () => {
+      resetNote()
+      resetNoteContent()
     }
   }, [data])
 
