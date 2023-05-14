@@ -1,3 +1,4 @@
+import { Note } from '@/types'
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { NextApiRequest, NextApiResponse } from 'next'
 
@@ -16,8 +17,9 @@ const NotesIdApi = async (req: NextApiRequest, res: NextApiResponse) => {
     const noteId = req.query.id
     const { data, error } = await supabase
       .from('notes')
-      .select('*')
+      .select('id, user_id, title, content')
       .eq('id', noteId)
+      .returns<Note>()
       .single()
 
     if (error) {

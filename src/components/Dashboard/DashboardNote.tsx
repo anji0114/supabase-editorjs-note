@@ -4,14 +4,8 @@ import { FC } from 'react'
 import useSWR from 'swr'
 import { DocumentTextIcon, PlusIcon } from '@heroicons/react/24/outline'
 import { NoteItem } from '@/components/Dashboard/DashboardNoteItem'
-
-type Note = {
-  id: string
-  title: string
-  content: string
-  user_id: string
-  created_at: string
-}
+import { LoadingBlock } from '@/components/Loading/LoadingBlock'
+import { Note } from '@/types'
 
 export const DashboardNote: FC = () => {
   const supabase = useSupabaseClient()
@@ -61,7 +55,9 @@ export const DashboardNote: FC = () => {
 
       <div className="mt-8">
         {isLoading ? (
-          <p className="text-center text-sm">ローディング</p>
+          <div className="min-h-[100px] relative">
+            <LoadingBlock />
+          </div>
         ) : error ? (
           <p className="text-center text-sm">
             エラーが発生しデータの取得に失敗しました。
@@ -73,7 +69,7 @@ export const DashboardNote: FC = () => {
                 key={note.id}
                 id={note.id}
                 title={note.title}
-                created_at={note.created_at}
+                created_at={note.created_at!}
               />
             ))}
           </ul>

@@ -1,16 +1,22 @@
-import { GetServerSideProps, NextPage } from 'next'
-import { NoteDetail } from '@/components/Note/NoteDetail'
-import { useStore } from '@/store'
+import { NextPage } from 'next'
 import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
-import { useRouter } from 'next/router'
+import { useStore } from '@/store'
+import { NoteDetail } from '@/components/Note/NoteDetail'
+import { Loading } from '@/components/Loading'
+import { Note } from '@/types'
+import Link from 'next/link'
 
-const NoteId: NextPage<{ params: string }> = ({ params }) => {
+const NoteId: NextPage = () => {
   const router = useRouter()
+  const { id } = router.query
   const supabase = useSupabaseClient()
   const setNote = useStore((state) => state.setNote)
-  const { data, error, isLoading } = useSWR(`/api/notes/${params}`)
+  const { data, error, isLoading } = useSWR<Note>(
+    id ? `/api/notes/${id}` : null
+  )
 
   const handleDeleteNote = async (id: string) => {
     const { error } = await supabase.from('notes').delete().eq('id', id)
@@ -23,23 +29,22 @@ const NoteId: NextPage<{ params: string }> = ({ params }) => {
   }
 
   useEffect(() => {
-    if (data !== undefined) {
+    if (data?.id) {
       setNote(data)
     }
   }, [data])
 
   if (isLoading) {
-    return (
-      <div className=" h-screen flex justify-center items-center">
-        ローディング中
-      </div>
-    )
+    return <Loading />
   }
 
   if (error) {
     return (
-      <div className=" h-screen flex justify-center items-center">
-        エラーが発生しました
+      <div className="h-screen flex justify-center flex-col gap-5 items-center">
+        <p>{error.message}</p>
+        <Link href={'/dashboard'} className="underline font-medium">
+          ホームに戻る
+        </Link>
       </div>
     )
   }
@@ -48,11 +53,3 @@ const NoteId: NextPage<{ params: string }> = ({ params }) => {
 }
 
 export default NoteId
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  return {
-    props: {
-      params: context.query.id,
-    },
-  }
-}

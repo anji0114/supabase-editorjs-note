@@ -1,3 +1,4 @@
+import { Note } from '@/types'
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { NextApiRequest, NextApiResponse } from 'next'
 
@@ -15,8 +16,9 @@ const NotesApi = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
     const { data, error } = await supabase
       .from('notes')
-      .select('*')
+      .select('id, user_id, title, content, created_at')
       .eq('user_id', user!.id)
+      .returns<Note[]>()
       .order('created_at', { ascending: false })
 
     if (error) {

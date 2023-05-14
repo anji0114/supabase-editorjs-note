@@ -11,11 +11,12 @@ type State = {
 export const useStore = create<State>()(
   devtools((set) => ({
     // note, note template
-    note: { id: '', title: '', content: { blocks: [] } },
+    note: { id: '', user_id: '', title: '', content: { blocks: [] } },
     setNote: (payload) => {
       set({
         note: {
           id: payload.id,
+          user_id: payload.user_id,
           title: payload.title,
           content: payload.content,
         },
@@ -25,6 +26,7 @@ export const useStore = create<State>()(
       set({
         note: {
           id: '',
+          user_id: '',
           title: '',
           content: { blocks: [] },
         },

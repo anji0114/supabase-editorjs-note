@@ -43,7 +43,7 @@ const Home = () => {
             )}
             <Link
               className="w-40 inline-block text-center p-3 text-sm rounded border border-[#222] bg-white hover:bg-[#eee]"
-              href="https://github.com/anji0114/prompt-note"
+              href="https://github.com/anji0114/supabase-editorjs-note"
               target="_blank"
             >
               GitHub
