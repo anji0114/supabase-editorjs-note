@@ -19,6 +19,7 @@ export const DashboardNote: FC = () => {
   const router = useRouter()
   const { data, error, isLoading } = useSWR('/api/notes')
 
+  // ノートの作成
   const handleCreateNote = async () => {
     const { data, error } = await supabase
       .from('notes')

@@ -1,7 +1,6 @@
 import { ChevronLeftIcon } from '@heroicons/react/24/outline'
 import { FC } from 'react'
 import { useRouter } from 'next/router'
-import { useStore } from '@/store'
 
 type Props = {
   handleUpdate: () => void

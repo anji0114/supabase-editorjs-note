@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react'
 import EditorJS from '@editorjs/editorjs'
-import { EDITOR_TOOLS, I18N } from './EditorTools'
+import { EDITOR_TOOLS, I18N } from '@/components/Editor/EditorTools'
 import { useStore } from '@/store'
 
 const EditorBlock: FC = () => {

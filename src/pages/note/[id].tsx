@@ -3,12 +3,24 @@ import { NoteDetail } from '@/components/Note/NoteDetail'
 import { useStore } from '@/store'
 import { useEffect } from 'react'
 import useSWR from 'swr'
-import { useUser } from '@supabase/auth-helpers-react'
+import { useSupabaseClient } from '@supabase/auth-helpers-react'
+import { useRouter } from 'next/router'
 
 const NoteId: NextPage<{ params: string }> = ({ params }) => {
+  const router = useRouter()
+  const supabase = useSupabaseClient()
   const setNote = useStore((state) => state.setNote)
-  const user = useUser()
   const { data, error, isLoading } = useSWR(`/api/notes/${params}`)
+
+  const handleDeleteNote = async (id: string) => {
+    const { error } = await supabase.from('notes').delete().eq('id', id)
+    if (error) {
+      alert(error.message)
+      return
+    }
+
+    router.reload()
+  }
 
   useEffect(() => {
     if (data !== undefined) {

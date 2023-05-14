@@ -1,12 +1,11 @@
 import { NextPage } from 'next'
-import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { AuthLayout } from '@/components/Auth/AuthLayout'
-import { AuthSignup } from '@/components/Auth/AuthSignup'
+import { AuthContent } from '@/components/Auth/AuthContent'
 
 const Signup: NextPage = () => {
   return (
     <AuthLayout title="サインアップ">
-      <AuthSignup />
+      <AuthContent isLogin={false} />
     </AuthLayout>
   )
 }

@@ -1,32 +1,52 @@
-import { FormEvent, useRef } from 'react'
-import { useRouter } from 'next/router'
-import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { FC, FormEvent, useRef } from 'react'
+import { useSupabaseClient } from '@supabase/auth-helpers-react'
 
-export const AuthLogin = () => {
+type Props = {
+  isLogin: boolean
+}
+
+export const AuthContent: FC<Props> = ({ isLogin }) => {
+  const router = useRouter()
   const supabase = useSupabaseClient()
   const emailRef = useRef<HTMLInputElement>(null)
   const passwordRef = useRef<HTMLInputElement>(null)
 
-  const router = useRouter()
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  // login
+  const handleSubmitLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const { error } = await supabase.auth.signInWithPassword({
       email: emailRef.current!.value,
       password: passwordRef.current!.value,
     })
-
     if (error) {
       alert(error.message)
       return
     }
+    router.push('/dashboard')
+  }
 
+  // sign up
+  const handleSubmitSignup = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const { error } = await supabase.auth.signUp({
+      email: emailRef.current!.value,
+      password: passwordRef.current!.value,
+    })
+    if (error) {
+      alert(error.message)
+      return
+    }
     router.push('/dashboard')
   }
 
   return (
     <>
-      <form className="mt-10" onSubmit={handleSubmit}>
+      <form
+        className="mt-10"
+        onSubmit={isLogin ? handleSubmitLogin : handleSubmitSignup}
+      >
         <div className="space-y-5">
           <dl>
             <dd className="text-sm">メールアドレス</dd>
@@ -54,25 +74,26 @@ export const AuthLogin = () => {
         </div>
         <div className="text-center mt-8">
           <button className="w-full inline-block py-3 text-sm rounded text-white bg-[#222] hover:bg-[#555]">
-            ログイン
+            {isLogin ? 'ログイン' : 'サインアップ'}
           </button>
         </div>
       </form>
-      <div className="mt-5 text-center">
-        <Link
-          href="/auth/login"
-          className="text-[12px] text-[#555] hover:underline"
-        >
-          パスワードを忘れた方はこちら
-        </Link>
-      </div>
       <div className="text-center mt-10">
-        <Link
-          href="/auth/signup"
-          className="w-full inline-block py-3 text-sm rounded border border-[#222] bg-white hover:bg-[#f5f5f5]"
-        >
-          ユーザー登録はこちらから
-        </Link>
+        {isLogin ? (
+          <Link
+            href="/auth/signup"
+            className="w-full inline-block py-3 text-sm rounded border border-[#222] bg-white hover:bg-[#f5f5f5]"
+          >
+            ユーザー登録はこちらから
+          </Link>
+        ) : (
+          <Link
+            href="/auth/login"
+            className="text-sm underline uppercase hover:opacity-75"
+          >
+            ログインはこちらから
+          </Link>
+        )}
       </div>
     </>
   )
