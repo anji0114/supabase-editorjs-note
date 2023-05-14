@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { FC } from 'react'
+import ogImage from '@/images/og.png'
 
 type Props = {
   pageTitle?: string
@@ -21,7 +22,7 @@ export const Meta: FC<Props> = ({
 
   const title = pageTitle ? `${pageTitle} | ${defaultTitle}` : defaultTitle
   const description = pageDescription ? pageDescription : defaultDescription
-  const imgUrl = pageImg ? pageImg : '/opg.png'
+  const imgUrl = pageImg ? pageImg : ogImage.src
   const imgWidth = 1200
   const imgHeight = 600
 
